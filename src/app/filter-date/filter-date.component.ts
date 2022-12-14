@@ -67,6 +67,10 @@ get toDate() { return this.filterForm.get('toDate')?.value; }
 applyFilter(){
   this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.filter(x=>x.DOB>=this.fromDate && x.DOB<=this.toDate))
 }
+
+clearFilter(){
+  this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA)
+}
   
   //applyFilter(event:Event){
    // console.log('oui !!!!')
