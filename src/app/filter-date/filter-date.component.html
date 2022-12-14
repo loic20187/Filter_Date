@@ -1,1 +1,59 @@
-<p>filter-date works!</p>
+<form class="date-block" [formGroup]="filterForm">
+	<div class="date-block__list">
+    <mat-form-field>
+      <input matInput 
+        [matDatepicker]="fromDate" 
+        placeholder="From Date" 
+        formControlName="fromDate">
+      <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+      <mat-datepicker #fromDate></mat-datepicker>
+    </mat-form-field>
+  </div>
+  	<div class="date-block__list">
+    <mat-form-field>
+      <input matInput 
+        [matDatepicker]="toDate" 
+        placeholder="To Date" 
+        formControlName="toDate">
+      <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+      <mat-datepicker #toDate></mat-datepicker>
+    </mat-form-field>
+  </div>
+   <button mat-button color="primary" class="primary" (click)="applyFilter()">Submit</button>
+</form>
+
+<table #filteredTable mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!-- Position Column -->
+  <ng-container matColumnDef="position">
+    <th mat-header-cell *matHeaderCellDef> No. </th>
+    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="weight">
+    <th mat-header-cell *matHeaderCellDef> Weight </th>
+    <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="DOB">
+    <th mat-header-cell *matHeaderCellDef> Date Of Birth </th>
+    <td mat-cell *matCellDef="let element"> {{element.DOB | date: 'dd/MM/yyyy'}} </td>
+  </ng-container>
+
+   <!-- Founded Column -->
+  <ng-container matColumnDef="founded">
+    <th mat-header-cell *matHeaderCellDef> Created </th>
+    <td mat-cell *matCellDef="let element"> {{element.created | date: 'dd/MM/yyyy'}} </td>
+  </ng-container> 
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
