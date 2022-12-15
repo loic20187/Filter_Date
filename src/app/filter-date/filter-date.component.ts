@@ -56,8 +56,13 @@ get toDate() { return this.filterForm.get('toDate')?.value; }
       if (this.fromDate && this.toDate) {
          return data.DOB >= this.fromDate && data.DOB <= this.toDate ;
         
+     }else if (this.fromDate ){
+      return data.DOB >= this.fromDate
+     }else if(this.toDate){
+      return data.DOB <= this.toDate
      }
-      return true;
+     
+     return true;
     }
    }
 
@@ -65,8 +70,39 @@ get toDate() { return this.filterForm.get('toDate')?.value; }
    
   }
 applyFilter(){
-  this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.filter(x=>x.DOB>=this.fromDate && x.DOB<=this.toDate))
+  const DateStart = JSON.stringify(this.fromDate)
+  const DateEnd = JSON.stringify(this.toDate)
+  //if (this.fromDate && this.toDate){
+    console.log(DateStart)
+    console.log(DateEnd)
+    if (DateStart && DateEnd != undefined){
+      console.log('1')
+      this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.filter(x=>x.DOB>=this.fromDate && x.DOB<=this.toDate))
+    }
+    else if (DateStart != undefined && DateEnd == undefined){
+      console.log('2')
+      this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.filter(x=>x.DOB>=this.fromDate ))
+    }
+    else if (DateStart == undefined && DateEnd != undefined){
+      console.log('3')
+      this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.filter(x=>x.DOB<=this.toDate ))
+    }
+  ///}
+   //else if(this.fromDate != null &&  ){
+    //console.log(this.fromDate)
+    //this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.filter(x=>x.DOB>=this.fromDate ))
+ // }else if (this.toDate){
+   // console.log(this.toDate)
+    //this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.filter(x=>x.DOB<=this.toDate ))
+ // }
+    
+     
+    
 }
+ 
+  //console.log('4')
+  
+
 
 clearFilter(){
   this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA)
