@@ -10,6 +10,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table'  
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input'
+import {MatSortModule} from '@angular/material/sort'
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {MatInputModule} from '@angular/material/input'
     MatFormFieldModule,
     MatTableModule,
     MatNativeDateModule,
-    MatInputModule
+    MatInputModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]

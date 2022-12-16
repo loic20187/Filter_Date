@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 export interface PeriodicElement {
   name: string;
@@ -41,6 +43,10 @@ export class FilterDateComponent implements OnInit {
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   pipe!: DatePipe;
 
+  minDate!: Date|null
+  maxDate!: Date|null
+ 
+
 filterForm = new FormGroup({
     fromDate: new FormControl(Date),
     toDate: new FormControl(Date),
@@ -48,7 +54,11 @@ filterForm = new FormGroup({
 
 get fromDate() { return this.filterForm.get('fromDate')?.value; }
 get toDate() { return this.filterForm.get('toDate')?.value; }
-  
+
+
+
+
+@ViewChild(MatSort) sort!: MatSort;
 
   constructor() {
     this.pipe = new DatePipe('fr');
@@ -64,10 +74,13 @@ get toDate() { return this.filterForm.get('toDate')?.value; }
      
      return true;
     }
+    this.minDate = this.fromDate
+    this.maxDate = this.toDate
    }
 
   ngOnInit(): void {
-   
+   const maxDate = JSON.stringify(this.toDate)
+   const minDate = this.fromDate.value()
   }
 applyFilter(){
   const DateStart = JSON.stringify(this.fromDate)
@@ -78,6 +91,7 @@ applyFilter(){
     if (DateStart && DateEnd != undefined){
       console.log('1')
       this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA.filter(x=>x.DOB>=this.fromDate && x.DOB<=this.toDate))
+      this.dataSource.sort = this.sort
     }
     else if (DateStart != undefined && DateEnd == undefined){
       console.log('2')
@@ -107,6 +121,32 @@ applyFilter(){
 clearFilter(){
   this.dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA)
 }
+
+fromDateChange(type: string, event: MatDatepickerInputEvent<Date>) {
+  console.log(`${type}: ${event.value}`);
+  this.minDate = event.value;
+
+  if (event.value !== null) {
+    this.minDate = new Date(
+      event!.value.getFullYear(),
+      event!.value.getMonth(),
+      event!.value.getDate() 
+    );
+  }
+}
+
+toDateChange(type: string, event: MatDatepickerInputEvent<Date>) {
+  this.maxDate = event.value;
+
+  if (event.value !== null) {
+    this.maxDate = new Date(
+      event!.value.getFullYear(),
+      event!.value.getMonth(),
+      event!.value.getDate() 
+    );
+  }
+}
+
   
   //applyFilter(event:Event){
    // console.log('oui !!!!')

@@ -2,6 +2,8 @@
 	<div class="date-block__list">
     <mat-form-field>
       <input matInput 
+      [max]="maxDate"
+      (dateInput)="fromDateChange('input', $event)"
         [matDatepicker]="fromDate" 
         placeholder="From Date" 
         formControlName="fromDate">
@@ -11,7 +13,8 @@
   </div>
   	<div class="date-block__list">
     <mat-form-field>
-      <input matInput 
+      <input matInput [min]="minDate"
+      (dateInput)="toDateChange('input', $event)"
         [matDatepicker]="toDate" 
         placeholder="To Date" 
         formControlName="toDate">
