@@ -1,9 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatPaginator } from '@angular/material/paginator';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 export interface PeriodicElement {
   name: string;
@@ -37,7 +39,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
 
 
-export class FilterDateComponent implements OnInit {
+export class FilterDateComponent implements OnInit,AfterViewInit {
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'DOB', 'founded'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -59,8 +61,9 @@ get toDate() { return this.filterForm.get('toDate')?.value; }
 
 
 @ViewChild(MatSort) sort!: MatSort;
+//@ViewChild(MatSort) paginator! : MatPaginator
 
-  constructor() {
+  constructor(private _liveAnnouncer: LiveAnnouncer) {
     this.pipe = new DatePipe('fr');
     this.dataSource.filterPredicate = (data, filter) => {
       if (this.fromDate && this.toDate) {
@@ -77,10 +80,13 @@ get toDate() { return this.filterForm.get('toDate')?.value; }
     this.minDate = this.fromDate
     this.maxDate = this.toDate
    }
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort  
+  }
 
   ngOnInit(): void {
-   const maxDate = JSON.stringify(this.toDate)
-   const minDate = this.fromDate.value()
+    //this.dataSource.sort = this.sort   
+    //this.dataSource.paginator = this.paginator
   }
 applyFilter(){
   const DateStart = JSON.stringify(this.fromDate)
@@ -144,6 +150,18 @@ toDateChange(type: string, event: MatDatepickerInputEvent<Date>) {
       event!.value.getMonth(),
       event!.value.getDate() 
     );
+  }
+}
+
+announceSortChange(sortState: Sort) {
+  // This example uses English messages. If your application supports
+  // multiple language, you would internationalize these strings.
+  // Furthermore, you can customize the message to add additional
+  // details about the values being sorted.
+  if (sortState.direction) {
+    this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+  } else {
+    this._liveAnnouncer.announce('Sorting cleared');
   }
 }
 
